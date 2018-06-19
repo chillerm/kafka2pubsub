@@ -11,16 +11,18 @@ logging.getLogger().addHandler(console)
 from app import kafka_service, pubsub_service
 
 
-def print_from_start(svc_kafka: kafka_service.KafkaService):
+def print_from_start(svc_kafka):
     for message in svc_kafka.subscribe_from_start():
-        print("{Topic: %s, Partition: %d, Offset: %d, Key: %s, Value: %s}"  % (message.topic, message.partition,
-                                          message.offset, message.key,
-                                          message.value))
+        print("{Topic: %s, Partition: %d, Offset: %d, Key: %s, Value: %s}" % (message.topic, message.partition,
+                                                                              message.offset, message.key,
+                                                                              message.value))
 
-def pipe_kafka_2_pubsub(svc_kafka: kafka_service.KafkaService, svc_pubsub: pubsub_service.PubSubService):
+
+def pipe_kafka_2_pubsub(svc_kafka, svc_pubsub):
     for message in svc_kafka.subscribe_from_start():
         pub_id = svc_pubsub.publish(message.value)
         LOGGER.info("Published Message ID: {}".format(pub_id))
+
 
 def main():
     ks = kafka_service.KafkaService()

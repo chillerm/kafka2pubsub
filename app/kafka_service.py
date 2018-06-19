@@ -4,9 +4,14 @@ from time import sleep
 
 from kafka import KafkaProducer as _KafkaProducer, KafkaConsumer as _KafkaConsumer
 from kafka.errors import KafkaError
+
 LOGGER = logging.getLogger(__name__)
 
-class KafkaService():
+
+class KafkaService:
+    def __init__(self):
+        pass
+
     LOGGER = logging.getLogger(__name__)
 
     KAFKA_TOPIC = 'world2kafka'
@@ -15,7 +20,7 @@ class KafkaService():
     _producer = _KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
 
     @staticmethod
-    def publish(message: str):
+    def publish(message):
         future = KafkaService._producer.send(KafkaService.KAFKA_TOPIC, bytes(message.encode('utf-8')))
         try:
             record_metadata = future.get(timeout=10)
@@ -27,7 +32,9 @@ class KafkaService():
 
     @staticmethod
     def subscribe_from_start():
-        return _KafkaConsumer(KafkaService.KAFKA_TOPIC, bootstrap_servers=[KafkaService.BOOTSTRAP_SERVER], auto_offset_reset='earliest', enable_auto_commit=True)
+        return _KafkaConsumer(KafkaService.KAFKA_TOPIC, bootstrap_servers=[KafkaService.BOOTSTRAP_SERVER],
+                              auto_offset_reset='earliest', enable_auto_commit=True)
+
 
 if __name__ == "__main__":
     while True:

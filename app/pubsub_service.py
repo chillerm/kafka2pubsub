@@ -6,7 +6,11 @@ from kafka.errors import KafkaError
 TOPIC_NAME = 'kafka2pubsub'
 PUBSUB_SUBSCRIPTION = 'pubsub2world'
 
-class PubSubService():
+
+class PubSubService:
+    def __init__(self):
+        pass
+
     LOGGER = logging.getLogger(__name__)
 
     _client = pubsub.Client()
@@ -23,7 +27,7 @@ class PubSubService():
     LOGGER.info("Prepared Subscription: " + _topic.project + ":" + _topic.name + "." + _sub.name)
 
     @staticmethod
-    def publish(message: bytes):
+    def publish(message):
         message_id = PubSubService._topic.publish(message)
         PubSubService.LOGGER.debug("PubSub Publish ID: {}".format(message_id))
         return message_id
@@ -32,10 +36,12 @@ class PubSubService():
     def subscribe():
         return PubSubService._sub
 
+
 if __name__ == '__main__':
     subscription = PubSubService.subscribe()
     while True:
         pubsubTuples = subscription.pull(max_messages=500)
         for pubsubTuple in pubsubTuples:
             message = pubsubTuple[1]
-            print("Pulled Message from PubSub Timestampped: {} ::::::: Data: {}".format(message.timestamp, message.data))
+            print(
+            "Pulled Message from PubSub Timestampped: {} ::::::: Data: {}".format(message.timestamp, message.data))
